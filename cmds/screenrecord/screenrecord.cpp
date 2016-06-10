@@ -31,7 +31,7 @@
 #include <unistd.h>
 
 #define LOG_TAG "ScreenRecord"
-#define ATRACE_TAG ATRACE_TAG_GRAPHICS
+//#define ATRACE_TAG ATRACE_TAG_GRAPHICS
 //#define LOG_NDEBUG 0
 #include <utils/Log.h>
 
