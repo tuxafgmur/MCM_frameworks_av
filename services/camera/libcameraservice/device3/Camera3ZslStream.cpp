@@ -15,7 +15,7 @@
  */
 
 #define LOG_TAG "Camera3-ZslStream"
-#define ATRACE_TAG ATRACE_TAG_CAMERA
+//#define ATRACE_TAG ATRACE_TAG_CAMERA
 //#define LOG_NDEBUG 0
 
 #include <inttypes.h>

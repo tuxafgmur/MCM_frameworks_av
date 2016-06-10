@@ -15,7 +15,7 @@
  */
 
 #define LOG_TAG "CameraService"
-#define ATRACE_TAG ATRACE_TAG_CAMERA
+//#define ATRACE_TAG ATRACE_TAG_CAMERA
 //#define LOG_NDEBUG 0
 
 #include <algorithm>
@@ -279,8 +279,8 @@ CameraService::~CameraService() {
 
 void CameraService::onDeviceStatusChanged(int  cameraId,
         camera_device_status_t newStatus) {
-    ALOGI("%s: Status changed for cameraId=%d, newStatus=%d", __FUNCTION__,
-          cameraId, newStatus);
+    //ALOGI("%s: Status changed for cameraId=%d, newStatus=%d", __FUNCTION__,
+    //      cameraId, newStatus);
 
     String8 id = String8::format("%d", cameraId);
     std::shared_ptr<CameraState> state = getCameraState(id);
@@ -293,7 +293,7 @@ void CameraService::onDeviceStatusChanged(int  cameraId,
     ICameraServiceListener::Status oldStatus = state->getStatus();
 
     if (oldStatus == static_cast<ICameraServiceListener::Status>(newStatus)) {
-        ALOGE("%s: State transition to the same status %#x not allowed", __FUNCTION__, newStatus);
+       // ALOGE("%s: State transition to the same status %#x not allowed", __FUNCTION__, newStatus);
         return;
     }
 
@@ -322,8 +322,8 @@ void CameraService::onDeviceStatusChanged(int  cameraId,
             }
         }
 
-        ALOGI("%s: Client for camera ID %s evicted due to device status change from HAL",
-                __FUNCTION__, id.string());
+       // ALOGI("%s: Client for camera ID %s evicted due to device status change from HAL",
+       //         __FUNCTION__, id.string());
 
         // Disconnect client
         if (clientToDisconnect.get() != nullptr) {
@@ -351,8 +351,8 @@ void CameraService::onTorchStatusChanged(const String8& cameraId,
 
 void CameraService::onTorchStatusChangedLocked(const String8& cameraId,
         ICameraServiceListener::TorchStatus newStatus) {
-    ALOGI("%s: Torch status changed for cameraId=%s, newStatus=%d",
-            __FUNCTION__, cameraId.string(), newStatus);
+    //ALOGI("%s: Torch status changed for cameraId=%s, newStatus=%d",
+    //        __FUNCTION__, cameraId.string(), newStatus);
 
     ICameraServiceListener::TorchStatus status;
     status_t res = getTorchStatusLocked(cameraId, &status);
@@ -571,7 +571,7 @@ status_t CameraService::getCameraCharacteristics(int cameraId,
          * - Convert cached CameraParameters into static CameraMetadata
          *   properties.
          */
-        ALOGI("%s: Switching to HAL1 shim implementation...", __FUNCTION__);
+        //ALOGI("%s: Switching to HAL1 shim implementation...", __FUNCTION__);
 
         if ((ret = generateShimMetadata(cameraId, cameraInfo)) != OK) {
             return ret;
@@ -724,7 +724,7 @@ status_t CameraService::makeClient(const sp<CameraService>& cameraService,
                 *client = new CameraClient(cameraService, tmp, packageName, id, facing,
                         clientPid, clientUid, getpid(), legacyMode);
             } else { // Camera2 API route
-                ALOGW("Camera using old HAL version: %d", deviceVersion);
+                //ALOGW("Camera using old HAL version: %d", deviceVersion);
                 return -EOPNOTSUPP;
             }
             break;
@@ -804,7 +804,7 @@ status_t CameraService::getLegacyParametersLazy(int cameraId,
         /*out*/
         CameraParameters* parameters) {
 
-    ALOGV("%s: for cameraId: %d", __FUNCTION__, cameraId);
+    //ALOGV("%s: for cameraId: %d", __FUNCTION__, cameraId);
 
     status_t ret = 0;
 
@@ -1079,7 +1079,7 @@ status_t CameraService::handleEvictionsLocked(const String8& cameraId, int clien
         for (auto& i : evicted) {
             sp<BasicClient> clientSp = i->getValue();
             if (clientSp.get() == nullptr) {
-                ALOGE("%s: Invalid state: Null client in active client list.", __FUNCTION__);
+                //ALOGE("%s: Invalid state: Null client in active client list.", __FUNCTION__);
 
                 // TODO: Remove this
                 LOG_ALWAYS_FATAL("%s: Invalid state for CameraService, null client in active list",
@@ -1123,8 +1123,8 @@ status_t CameraService::handleEvictionsLocked(const String8& cameraId, int clien
     IPCThreadState::self()->restoreCallingIdentity(token);
 
     for (const auto& i : evictedClients) {
-        ALOGV("%s: Waiting for disconnect to complete for client for device %s (PID %" PRId32 ")",
-                __FUNCTION__, i->getKey().string(), i->getOwnerId());
+        //ALOGV("%s: Waiting for disconnect to complete for client for device %s (PID %" PRId32 ")",
+        //        __FUNCTION__, i->getKey().string(), i->getOwnerId());
         ret = mActiveClientManager.waitUntilRemoved(i, DEFAULT_DISCONNECT_TIMEOUT_NS);
         if (ret == TIMED_OUT) {
             ALOGE("%s: Timed out waiting for client for device %s to disconnect, "
@@ -1347,8 +1347,8 @@ void CameraService::notifySystemEvent(int32_t eventId, const int32_t* args, size
         }
         case ICameraService::NO_EVENT:
         default: {
-            ALOGW("%s: Received invalid system event from system_server: %d", __FUNCTION__,
-                    eventId);
+            //ALOGW("%s: Received invalid system event from system_server: %d", __FUNCTION__,
+            //        eventId);
             break;
         }
     }
@@ -1357,7 +1357,7 @@ void CameraService::notifySystemEvent(int32_t eventId, const int32_t* args, size
 status_t CameraService::addListener(const sp<ICameraServiceListener>& listener) {
     ATRACE_CALL();
 
-    ALOGV("%s: Add listener %p", __FUNCTION__, listener.get());
+    //ALOGV("%s: Add listener %p", __FUNCTION__, listener.get());
 
     if (listener == nullptr) {
         ALOGE("%s: Listener must not be null", __FUNCTION__);
@@ -1370,8 +1370,8 @@ status_t CameraService::addListener(const sp<ICameraServiceListener>& listener) 
         Mutex::Autolock lock(mStatusListenerLock);
         for (auto& it : mListenerList) {
             if (IInterface::asBinder(it) == IInterface::asBinder(listener)) {
-                ALOGW("%s: Tried to add listener %p which was already subscribed",
-                      __FUNCTION__, listener.get());
+                //ALOGW("%s: Tried to add listener %p which was already subscribed",
+                //      __FUNCTION__, listener.get());
                 return ALREADY_EXISTS;
             }
         }
@@ -1407,7 +1407,7 @@ status_t CameraService::addListener(const sp<ICameraServiceListener>& listener) 
 status_t CameraService::removeListener(const sp<ICameraServiceListener>& listener) {
     ATRACE_CALL();
 
-    ALOGV("%s: Remove listener %p", __FUNCTION__, listener.get());
+    //ALOGV("%s: Remove listener %p", __FUNCTION__, listener.get());
 
     if (listener == 0) {
         ALOGE("%s: Listener must not be null", __FUNCTION__);
@@ -1426,8 +1426,8 @@ status_t CameraService::removeListener(const sp<ICameraServiceListener>& listene
         }
     }
 
-    ALOGW("%s: Tried to remove a listener %p which was not subscribed",
-          __FUNCTION__, listener.get());
+    //ALOGW("%s: Tried to remove a listener %p which was not subscribed",
+    //      __FUNCTION__, listener.get());
 
     return BAD_VALUE;
 }
@@ -1530,7 +1530,7 @@ bool CameraService::evictClientIdByRemote(const wp<IBinder>& remote) {
         for (auto& i : mActiveClientManager.getAll()) {
             auto clientSp = i->getValue();
             if (clientSp.get() == nullptr) {
-                ALOGE("%s: Dead client still in mActiveClientManager.", __FUNCTION__);
+                //ALOGE("%s: Dead client still in mActiveClientManager.", __FUNCTION__);
                 mActiveClientManager.remove(i);
                 continue;
             }
@@ -1939,7 +1939,7 @@ void CameraService::BasicClient::disconnect() {
     }
 
     finishCameraOps();
-    ALOGI("%s: Disconnected client for camera %d for PID %d", __FUNCTION__, mCameraId, mClientPid);
+    //ALOGI("%s: Disconnected client for camera %d for PID %d", __FUNCTION__, mCameraId, mClientPid);
 
     // client shouldn't be able to call into us anymore
     mClientPid = 0;
@@ -2055,7 +2055,7 @@ void CameraService::BasicClient::opChanged(int32_t op, const String16& packageNa
     String8 myName(mClientPackageName);
 
     if (op != AppOpsManager::OP_CAMERA) {
-        ALOGW("Unexpected app ops notification received: %d", op);
+        //ALOGW("Unexpected app ops notification received: %d", op);
         return;
     }
 
@@ -2507,8 +2507,8 @@ void CameraService::updateStatus(ICameraServiceListener::Status status, const St
     auto state = getCameraState(cameraId);
 
     if (state == nullptr) {
-        ALOGW("%s: Could not update the status for %s, no such device exists", __FUNCTION__,
-                cameraId.string());
+        //ALOGW("%s: Could not update the status for %s, no such device exists", __FUNCTION__,
+        //        cameraId.string());
         return;
     }
 

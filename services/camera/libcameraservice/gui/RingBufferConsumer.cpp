@@ -16,7 +16,7 @@
 
 //#define LOG_NDEBUG 0
 #define LOG_TAG "RingBufferConsumer"
-#define ATRACE_TAG ATRACE_TAG_GRAPHICS
+//#define ATRACE_TAG ATRACE_TAG_GRAPHICS
 
 #include <inttypes.h>
 
