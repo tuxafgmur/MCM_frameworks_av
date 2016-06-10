@@ -219,7 +219,7 @@ status_t NuPlayer::GenericSource::initFromDataSource() {
 #ifndef TARGET_8974
     if (AVNuUtils::get()->canUseSetBuffers(mFileMeta)) {
         mUseSetBuffers = true;
-        ALOGI("setBuffers mode enabled");
+        //ALOGI("setBuffers mode enabled");
     }
 #endif
 
@@ -517,7 +517,7 @@ void NuPlayer::GenericSource::notifyPreparedAndCleanup(status_t err) {
 }
 
 void NuPlayer::GenericSource::start() {
-    ALOGI("start");
+    //ALOGI("start");
 
     mStopRead = false;
     if (mAudioTrack.mSource != NULL) {

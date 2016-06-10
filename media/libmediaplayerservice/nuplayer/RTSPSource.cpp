@@ -138,7 +138,7 @@ void NuPlayer::RTSPSource::pause() {
         // Check if EOS or ERROR is received
         if (source != NULL && source->isFinished(mediaDurationUs)) {
             if (mHandler != NULL) {
-                ALOGI("Nearing EOS...No Pause is issued");
+                //ALOGI("Nearing EOS...No Pause is issued");
                 mHandler->cancelTimeoutCheck();
             }
             return;
@@ -444,10 +444,10 @@ void NuPlayer::RTSPSource::onMessageReceived(const sp<AMessage> &msg) {
                     && damaged) {
                 if (isVideo && mKeepDamagedAccessUnits
                         && mNumKeepDamagedAccessUnits < kMaxNumKeepDamagedAccessUnits) {
-                    ALOGI("keep a damaged access unit.");
+                    //ALOGI("keep a damaged access unit.");
                     ++mNumKeepDamagedAccessUnits;
                 } else {
-                    ALOGI("dropping damaged access unit.");
+                    //ALOGI("dropping damaged access unit.");
                     break;
                 }
             } else {

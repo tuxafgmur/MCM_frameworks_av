@@ -72,7 +72,7 @@ sp<MetaData> AVNuUtils::createPCMMetaFromSource(const sp<MetaData> &sMeta) {
     tPCMMeta->setInt32(kKeyBitsPerSample, bits > 24 ? 24 : bits);
 
     if (sMeta == NULL) {
-        ALOGW("no meta returning dummy meta");
+        //ALOGW("no meta returning dummy meta");
         return tPCMMeta;
     }
 
@@ -84,11 +84,11 @@ sp<MetaData> AVNuUtils::createPCMMetaFromSource(const sp<MetaData> &sMeta) {
 
     int32_t cmask = 0;
     if (!sMeta->findInt32(kKeyChannelMask, &cmask) || (cmask == 0)) {
-        ALOGI("No channel mask, try channel count");
+        //ALOGI("No channel mask, try channel count");
     }
     int32_t channelCount = 0;
     if (!sMeta->findInt32(kKeyChannelCount, &channelCount)) {
-        ALOGI("No channel count either");
+        //ALOGI("No channel count either");
     } else {
         //if channel mask is not set till now, use channel count
         //to retrieve channel count
@@ -101,13 +101,13 @@ sp<MetaData> AVNuUtils::createPCMMetaFromSource(const sp<MetaData> &sMeta) {
 
     int64_t duration = INT_MAX;
     if (!sMeta->findInt64(kKeyDuration, &duration)) {
-        ALOGW("No duration in meta setting max duration");
+        //ALOGW("No duration in meta setting max duration");
     }
     tPCMMeta->setInt64(kKeyDuration, duration);
 
     int32_t bitRate = -1;
     if (!sMeta->findInt32(kKeyBitRate, &bitRate)) {
-        ALOGW("No bitrate info");
+        //ALOGW("No bitrate info");
     } else {
         tPCMMeta->setInt32(kKeyBitRate, bitRate);
     }
@@ -149,15 +149,8 @@ bool AVNuUtils::pcmOffloadException(const sp<MetaData> &meta) {
             break;
         }
     }
-    ALOGI("decision %d mime %s", decision, mime);
+    //ALOGI("decision %d mime %s", decision, mime);
     return decision;
-#if 0
-    //if PCM offload flag is disabled, do not offload any sessions
-    //using pcm offload
-    decision = true;
-    ALOGI("decision %d mime %s", decision, mime);
-    return decision;
-#endif
 }
 
 bool AVNuUtils::isRAWFormat(const sp<MetaData> &meta) {
@@ -292,7 +285,7 @@ status_t AVNuUtils::convertToSinkFormatIfNeeded(
                 dstFormat = AUDIO_FORMAT_PCM_24_BIT_OFFLOAD;
             break;
         case AUDIO_FORMAT_DEFAULT:
-            ALOGI("OffloadInfo not yet initialized, retry");
+            //ALOGI("OffloadInfo not yet initialized, retry");
             return NO_INIT;
         default:
             ALOGE("Invalid offload format %x given for conversion",

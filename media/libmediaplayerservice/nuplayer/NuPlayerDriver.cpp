@@ -246,7 +246,7 @@ status_t NuPlayerDriver::prepareAsync() {
 }
 
 status_t NuPlayerDriver::start() {
-    ALOGD("start(%p), state is %d, eos is %d", this, mState, mAtEOS);
+    //ALOGD("start(%p), state is %d, eos is %d", this, mState, mAtEOS);
     Mutex::Autolock autoLock(mLock);
 
     switch (mState) {
@@ -306,7 +306,7 @@ status_t NuPlayerDriver::start() {
 }
 
 status_t NuPlayerDriver::stop() {
-    ALOGD("stop(%p)", this);
+    //ALOGD("stop(%p)", this);
     Mutex::Autolock autoLock(mLock);
 
     switch (mState) {
@@ -394,7 +394,7 @@ status_t NuPlayerDriver::getSyncSettings(AVSyncSettings *sync, float *videoFps) 
 }
 
 status_t NuPlayerDriver::seekTo(int msec) {
-    ALOGD("seekTo(%p) %d ms", this, msec);
+    //ALOGD("seekTo(%p) %d ms", this, msec);
     Mutex::Autolock autoLock(mLock);
 
     int64_t seekTimeUs = msec * 1000ll;
@@ -465,7 +465,7 @@ status_t NuPlayerDriver::getDuration(int *msec) {
 }
 
 status_t NuPlayerDriver::reset() {
-    ALOGD("reset(%p)", this);
+    //ALOGD("reset(%p)", this);
     Mutex::Autolock autoLock(mLock);
 
     switch (mState) {
@@ -620,7 +620,7 @@ status_t NuPlayerDriver::getMetadata(
 }
 
 void NuPlayerDriver::notifyResetComplete() {
-    ALOGD("notifyResetComplete(%p)", this);
+    //ALOGD("notifyResetComplete(%p)", this);
     Mutex::Autolock autoLock(mLock);
 
     CHECK_EQ(mState, STATE_RESET_IN_PROGRESS);
@@ -714,7 +714,7 @@ status_t NuPlayerDriver::dump(
         }
     }
 
-    ALOGI("%s", logString.c_str());
+    //ALOGI("%s", logString.c_str());
 
     if (fd >= 0) {
         FILE *out = fdopen(dup(fd), "w");
@@ -734,7 +734,7 @@ void NuPlayerDriver::notifyListener(
 
 void NuPlayerDriver::notifyListener_l(
         int msg, int ext1, int ext2, const Parcel *in) {
-    ALOGD("notifyListener_l(%p), (%d, %d, %d)", this, msg, ext1, ext2);
+    //ALOGD("notifyListener_l(%p), (%d, %d, %d)", this, msg, ext1, ext2);
     switch (msg) {
         case MEDIA_PLAYBACK_COMPLETE:
         {
@@ -745,7 +745,7 @@ void NuPlayerDriver::notifyListener_l(
                         streamType = mAudioSink->getAudioStreamType();
                     }
                     if (streamType == AUDIO_STREAM_NOTIFICATION) {
-                        ALOGW("disabling auto-loop for notification");
+                        //ALOGW("disabling auto-loop for notification");
                         mAutoLoop = false;
                     }
                 }

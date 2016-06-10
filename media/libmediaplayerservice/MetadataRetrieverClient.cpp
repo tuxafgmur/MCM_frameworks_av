@@ -202,7 +202,7 @@ sp<IMemory> MetadataRetrieverClient::getFrameAtTime(int64_t timeUs, int option)
     }
     VideoFrame *frame = mRetriever->getFrameAtTime(timeUs, option);
     if (frame == NULL) {
-        ALOGE("failed to capture a video frame");
+        //ALOGE("failed to capture a video frame");
         return NULL;
     }
     size_t size = sizeof(VideoFrame) + frame->mSize;
@@ -243,7 +243,7 @@ sp<IMemory> MetadataRetrieverClient::extractAlbumArt()
     }
     MediaAlbumArt *albumArt = mRetriever->extractAlbumArt();
     if (albumArt == NULL) {
-        ALOGE("failed to extract an album art");
+        //ALOGE("failed to extract an album art");
         return NULL;
     }
     size_t size = sizeof(MediaAlbumArt) + albumArt->size();

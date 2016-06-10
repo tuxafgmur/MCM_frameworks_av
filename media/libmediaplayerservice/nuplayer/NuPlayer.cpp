@@ -650,10 +650,10 @@ void NuPlayer::onMessageReceived(const sp<AMessage> &msg) {
             CHECK(msg->findObject("surface", &obj));
             sp<Surface> surface = static_cast<Surface *>(obj.get());
 
-            ALOGD("onSetVideoSurface(%p, %s video decoder)",
-                    surface.get(),
-                    (mSource != NULL && mStarted && mSource->getFormat(false /* audio */) != NULL
-                            && mVideoDecoder != NULL) ? "have" : "no");
+//             ALOGD("onSetVideoSurface(%p, %s video decoder)",
+//                     surface.get(),
+//                     (mSource != NULL && mStarted && mSource->getFormat(false /* audio */) != NULL
+//                             && mVideoDecoder != NULL) ? "have" : "no");
 
             // Need to check mStarted before calling mSource->getFormat because NuPlayer might
             // be in preparing state and it could take long time.
@@ -1270,14 +1270,14 @@ void NuPlayer::onMessageReceived(const sp<AMessage> &msg) {
 
 void NuPlayer::onResume() {
     if (!mPaused || mResetting) {
-        ALOGD_IF(mResetting, "resetting, onResume discarded");
+        //ALOGD_IF(mResetting, "resetting, onResume discarded");
         return;
     }
     mPaused = false;
     if (mSource != NULL) {
         mSource->resume();
-    } else {
-        ALOGW("resume called when source is gone or not set");
+//     } else {
+//         ALOGW("resume called when source is gone or not set");
     }
     if (mOffloadAudio && !mOffloadDecodedPCM) {
           // Resuming after a pause timed out event, check if can continue with offload
@@ -1293,8 +1293,8 @@ void NuPlayer::onResume() {
     }
     if (mRenderer != NULL) {
         mRenderer->resume();
-    } else {
-        ALOGW("resume called when renderer is gone or not set");
+//     } else {
+//         ALOGW("resume called when renderer is gone or not set");
     }
 }
 
@@ -1411,13 +1411,13 @@ void NuPlayer::onPause() {
     mPaused = true;
     if (mSource != NULL) {
         mSource->pause();
-    } else {
-        ALOGW("pause called when source is gone or not set");
+//     } else {
+//         ALOGW("pause called when source is gone or not set");
     }
     if (mRenderer != NULL) {
         mRenderer->pause();
-    } else {
-        ALOGW("pause called when renderer is gone or not set");
+//     } else {
+//         ALOGW("pause called when renderer is gone or not set");
     }
 }
 
@@ -1532,7 +1532,7 @@ void NuPlayer::determineAudioModeChange() {
     }
 
     if (mRenderer == NULL) {
-        ALOGW("No renderer can be used to determine audio mode. Use non-offload for safety.");
+        //ALOGW("No renderer can be used to determine audio mode. Use non-offload for safety.");
         mOffloadAudio = false;
         mOffloadDecodedPCM = false;
         return;
@@ -1569,7 +1569,7 @@ status_t NuPlayer::instantiateDecoder(bool audio, sp<DecoderBase> *decoder) {
         return OK;
     }
     if (mSource == NULL) {
-        ALOGD("%s Ignore instantiate decoder after clearing source", __func__);
+        //ALOGD("%s Ignore instantiate decoder after clearing source", __func__);
         return INVALID_OPERATION;
     }
     sp<AMessage> format = mSource->getFormat(audio);
@@ -1753,8 +1753,8 @@ void NuPlayer::flushDecoder(bool audio, bool needShutdown) {
 
     const sp<DecoderBase> &decoder = getDecoder(audio);
     if (decoder == NULL) {
-        ALOGI("flushDecoder %s without decoder present",
-             audio ? "audio" : "video");
+        //ALOGI("flushDecoder %s without decoder present",
+        //     audio ? "audio" : "video");
         return;
     }
 
@@ -1766,7 +1766,7 @@ void NuPlayer::flushDecoder(bool audio, bool needShutdown) {
 
     // Reject flush if the decoder state is not one of the above
     if (inShutdown) {
-        ALOGI("flush %s called while in shutdown", audio ? "audio" : "video");
+        //ALOGI("flush %s called while in shutdown", audio ? "audio" : "video");
         return;
     }
 
@@ -1798,7 +1798,7 @@ void NuPlayer::flushDecoder(bool audio, bool needShutdown) {
 
 void NuPlayer::queueDecoderShutdown(
         bool audio, bool video, const sp<AMessage> &reply) {
-    ALOGI("queueDecoderShutdown audio=%d, video=%d", audio, video);
+    //ALOGI("queueDecoderShutdown audio=%d, video=%d", audio, video);
 
     mDeferredActions.push_back(
             new FlushDecoderAction(
@@ -2194,7 +2194,7 @@ void NuPlayer::onSourceNotify(const sp<AMessage> &msg) {
         {
             // ignore if not playing
             if (mStarted) {
-                ALOGI("buffer low, pausing...");
+                //ALOGI("buffer low, pausing...");
 
                 mPausedForBuffering = true;
                 onPause();
@@ -2212,7 +2212,7 @@ void NuPlayer::onSourceNotify(const sp<AMessage> &msg) {
         {
             // ignore if not playing
             if (mStarted) {
-                ALOGI("buffer ready, resuming...");
+                //("buffer ready, resuming...");
 
                 mPausedForBuffering = false;
 
@@ -2481,12 +2481,12 @@ bool NuPlayer::canOffloadDecodedPCMStream(const sp<MetaData> audioMeta,
         sp<MetaData> audioPCMMeta =
                 AVNuUtils::get()->createPCMMetaFromSource(audioMeta);
 
-        ALOGI("canOffloadDecodedPCMStream");
+        //ALOGI("canOffloadDecodedPCMStream");
         audioPCMMeta->dumpToLog();
         mOffloadDecodedPCM =
                 ((mime && !AVNuUtils::get()->pcmOffloadException(audioMeta)) &&
                 canOffloadStream(audioPCMMeta, hasVideo, isStreaming, streamType));
-        ALOGI("PCM offload decided: %d", mOffloadDecodedPCM);
+        //ALOGI("PCM offload decided: %d", mOffloadDecodedPCM);
     }
     return mOffloadDecodedPCM;
 }
