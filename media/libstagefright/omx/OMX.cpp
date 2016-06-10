@@ -474,7 +474,7 @@ OMX_ERRORTYPE OMX::OnEvent(
 
     sp<OMX::CallbackDispatcher> dispatcher = findDispatcher(node);
     if (dispatcher == NULL) {
-       ALOGW("OnEvent Callback dispatcher NULL, skip post");
+       //ALOGW("OnEvent Callback dispatcher NULL, skip post");
        return OMX_ErrorNone;
     }
 
@@ -525,8 +525,8 @@ OMX_ERRORTYPE OMX::OnEmptyBufferDone(
     sp<OMX::CallbackDispatcher> callbackDispatcher = findDispatcher(node);
     if (callbackDispatcher != NULL) {
         callbackDispatcher->post(msg);
-    } else {
-        ALOGW("OnEmptyBufferDone Callback dispatcher NULL, skip post");
+//     } else {
+//         ALOGW("OnEmptyBufferDone Callback dispatcher NULL, skip post");
     }
 
     return OMX_ErrorNone;
@@ -549,8 +549,8 @@ OMX_ERRORTYPE OMX::OnFillBufferDone(
     sp<OMX::CallbackDispatcher> callbackDispatcher = findDispatcher(node);
     if (callbackDispatcher != NULL) {
         callbackDispatcher->post(msg);
-    } else {
-        ALOGW("OnFillBufferDone Callback dispatcher NULL, skip post");
+//     } else {
+//         ALOGW("OnFillBufferDone Callback dispatcher NULL, skip post");
     }
 
     return OMX_ErrorNone;

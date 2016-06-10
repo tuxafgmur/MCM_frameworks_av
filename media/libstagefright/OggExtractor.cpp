@@ -275,15 +275,6 @@ status_t OggSource::read(
         return err;
     }
 
-#if 0
-    int64_t timeUs;
-    if (packet->meta_data()->findInt64(kKeyTime, &timeUs)) {
-        ALOGI("found time = %lld us", timeUs);
-    } else {
-        ALOGI("NO time");
-    }
-#endif
-
     packet->meta_data()->setInt32(kKeyIsSyncFrame, 1);
 
     *out = packet;
@@ -1164,7 +1155,6 @@ void MyOggExtractor::parseFileMetaData() {
         const char *comment = mVc.user_comments[i];
         size_t commentLength = mVc.comment_lengths[i];
         parseVorbisComment(mFileMeta, comment, commentLength);
-        //ALOGI("comment #%d: '%s'", i + 1, mVc.user_comments[i]);
     }
 }
 

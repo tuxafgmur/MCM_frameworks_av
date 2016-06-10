@@ -200,13 +200,6 @@ status_t WAVExtractor::init() {
                 return ERROR_UNSUPPORTED;
             }
 
-            if (mWaveFormat != WAVE_FORMAT_EXTENSIBLE) {
-                if (mNumChannels != 1 && mNumChannels != 2) {
-                    ALOGW("More than 2 channels (%d) in non-WAVE_EXT, unknown channel mask",
-                            mNumChannels);
-                }
-            }
-
             mSampleRate = U32_LE_AT(&formatSpec[4]);
 
             if (mSampleRate == 0) {
@@ -240,10 +233,6 @@ status_t WAVExtractor::init() {
                         ALOGE("validBits(%d) != bitsPerSample(%d) are not supported",
                                 validBitsPerSample, mBitsPerSample);
                         return ERROR_UNSUPPORTED;
-                    } else {
-                        // we only support valitBitsPerSample == bitsPerSample but some WAV_EXT
-                        // writers don't correctly set the valid bits value, and leave it at 0.
-                        ALOGW("WAVE_EXT has 0 valid bits per sample, ignoring");
                     }
                 }
 

@@ -90,7 +90,7 @@ void *MediaCodecList::profilerThreadWrapper(void * /*arg*/) {
                                 // the new MediaCodecList
     MediaCodecList *codecList = new MediaCodecList();
     if (codecList->initCheck() != OK) {
-        ALOGW("Failed to create a new MediaCodecList, skipping codec profiling.");
+        //ALOGW("Failed to create a new MediaCodecList, skipping codec profiling.");
         delete codecList;
         return NULL;
     }
@@ -124,7 +124,7 @@ sp<IMediaCodecList> MediaCodecList::getLocalInstance() {
                 ALOGV("Codec profiling needed, will be run in separated thread.");
                 pthread_t profiler;
                 if (pthread_create(&profiler, NULL, profilerThreadWrapper, NULL) != 0) {
-                    ALOGW("Failed to create thread for codec profiling.");
+                    //ALOGW("Failed to create thread for codec profiling.");
                 }
             }
         } else {
@@ -295,24 +295,6 @@ void MediaCodecList::parseTopLevelXMLFile(const char *codecs_xml, bool ignore_er
         }
     }
 
-#if 0
-    for (size_t i = 0; i < mCodecInfos.size(); ++i) {
-        const CodecInfo &info = mCodecInfos.itemAt(i);
-
-        AString line = info.mName;
-        line.append(" supports ");
-        for (size_t j = 0; j < mTypes.size(); ++j) {
-            uint32_t value = mTypes.valueAt(j);
-
-            if (info.mTypes & (1ul << value)) {
-                line.append(mTypes.keyAt(j));
-                line.append(" ");
-            }
-        }
-
-        ALOGI("%s", line.c_str());
-    }
-#endif
 }
 
 MediaCodecList::~MediaCodecList() {
@@ -326,7 +308,7 @@ void MediaCodecList::parseXMLFile(const char *path) {
     FILE *file = fopen(path, "r");
 
     if (file == NULL) {
-        ALOGW("unable to open media codecs configuration xml file: %s", path);
+        //ALOGW("unable to open media codecs configuration xml file: %s", path);
         mInitCheck = NAME_NOT_FOUND;
         return;
     }
@@ -506,7 +488,7 @@ void MediaCodecList::startElementHandler(
             // ignore limits and features specified outside of type
             bool outside = !inType && !mCurrentInfo->mHasSoleMime;
             if (outside && (!strcmp(name, "Limit") || !strcmp(name, "Feature"))) {
-                ALOGW("ignoring %s specified outside of a Type", name);
+                //ALOGW("ignoring %s specified outside of a Type", name);
             } else if (!strcmp(name, "Limit")) {
                 mInitCheck = addLimit(attrs);
             } else if (!strcmp(name, "Feature")) {
@@ -1040,8 +1022,8 @@ status_t MediaCodecList::addLimit(const char **attrs) {
             AString tag = name;
             tag.append("-ranges");
             mCurrentInfo->addDetail(tag, ranges);
-        } else {
-            ALOGW("Ignoring unrecognized limit '%s'", name.c_str());
+        //} else {
+        //    ALOGW("Ignoring unrecognized limit '%s'", name.c_str());
         }
     }
     return OK;

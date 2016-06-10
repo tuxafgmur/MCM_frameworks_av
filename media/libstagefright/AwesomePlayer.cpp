@@ -18,7 +18,7 @@
 
 //#define LOG_NDEBUG 0
 #define LOG_TAG "AwesomePlayer"
-#define ATRACE_TAG ATRACE_TAG_VIDEO
+//#define ATRACE_TAG ATRACE_TAG_VIDEO
 
 #include <inttypes.h>
 

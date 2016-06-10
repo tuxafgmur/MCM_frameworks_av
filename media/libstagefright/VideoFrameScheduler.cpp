@@ -17,7 +17,7 @@
 //#define LOG_NDEBUG 0
 #define LOG_TAG "VideoFrameScheduler"
 #include <utils/Log.h>
-#define ATRACE_TAG ATRACE_TAG_VIDEO
+//#define ATRACE_TAG ATRACE_TAG_VIDEO
 #include <utils/Trace.h>
 
 #include <sys/time.h>

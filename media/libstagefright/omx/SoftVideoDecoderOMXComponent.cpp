@@ -301,7 +301,7 @@ OMX_ERRORTYPE SoftVideoDecoderOMXComponent::internalGetParameter(
             }
 
             if (profileLevel->nPortIndex != kInputPortIndex) {
-                ALOGE("Invalid port index: %" PRIu32, profileLevel->nPortIndex);
+                // ALOGE("Invalid port index: %" PRIu32, profileLevel->nPortIndex);
                 return OMX_ErrorUnsupportedIndex;
             }
 

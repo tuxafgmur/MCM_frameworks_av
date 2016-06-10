@@ -468,33 +468,33 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 
 void ACodec::BufferInfo::setWriteFence(int fenceFd, const char *dbg) {
-    if (mFenceFd >= 0) {
-        ALOGW("OVERWRITE OF %s fence %d by write fence %d in %s",
-                mIsReadFence ? "read" : "write", mFenceFd, fenceFd, dbg);
-    }
+//     if (mFenceFd >= 0) {
+//         ALOGW("OVERWRITE OF %s fence %d by write fence %d in %s",
+//                 mIsReadFence ? "read" : "write", mFenceFd, fenceFd, dbg);
+//     }
     mFenceFd = fenceFd;
     mIsReadFence = false;
 }
 
 void ACodec::BufferInfo::setReadFence(int fenceFd, const char *dbg) {
-    if (mFenceFd >= 0) {
-        ALOGW("OVERWRITE OF %s fence %d by read fence %d in %s",
-                mIsReadFence ? "read" : "write", mFenceFd, fenceFd, dbg);
-    }
+//     if (mFenceFd >= 0) {
+//         ALOGW("OVERWRITE OF %s fence %d by read fence %d in %s",
+//                 mIsReadFence ? "read" : "write", mFenceFd, fenceFd, dbg);
+//     }
     mFenceFd = fenceFd;
     mIsReadFence = true;
 }
 
 void ACodec::BufferInfo::checkWriteFence(const char *dbg) {
-    if (mFenceFd >= 0 && mIsReadFence) {
-        ALOGD("REUSING read fence %d as write fence in %s", mFenceFd, dbg);
-    }
+//     if (mFenceFd >= 0 && mIsReadFence) {
+//         ALOGD("REUSING read fence %d as write fence in %s", mFenceFd, dbg);
+//     }
 }
 
 void ACodec::BufferInfo::checkReadFence(const char *dbg) {
-    if (mFenceFd >= 0 && !mIsReadFence) {
-        ALOGD("REUSING write fence %d as read fence in %s", mFenceFd, dbg);
-    }
+//     if (mFenceFd >= 0 && !mIsReadFence) {
+//         ALOGD("REUSING write fence %d as read fence in %s", mFenceFd, dbg);
+//     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -653,7 +653,7 @@ status_t ACodec::handleSetSurface(const sp<Surface> &surface) {
     // allow keeping unset surface
     if (surface == NULL) {
         if (mNativeWindow != NULL) {
-            ALOGW("cannot unset a surface");
+            //ALOGW("cannot unset a surface");
             return INVALID_OPERATION;
         }
         return OK;
@@ -661,7 +661,7 @@ status_t ACodec::handleSetSurface(const sp<Surface> &surface) {
 
     // cannot switch from bytebuffers to surface
     if (mNativeWindow == NULL) {
-        ALOGW("component was not configured with a surface");
+        //ALOGW("component was not configured with a surface");
         return INVALID_OPERATION;
     }
 
@@ -674,7 +674,7 @@ status_t ACodec::handleSetSurface(const sp<Surface> &surface) {
 
     // we do not support changing a tunneled surface after start
     if (mTunneled) {
-        ALOGW("cannot change tunneled surface");
+        //ALOGW("cannot change tunneled surface");
         return INVALID_OPERATION;
     }
 
@@ -687,7 +687,7 @@ status_t ACodec::handleSetSurface(const sp<Surface> &surface) {
     int ignoredFlags = kVideoGrallocUsage;
     // New output surface is not allowed to add new usage flag except ignored ones.
     if ((usageBits & ~(mNativeWindowUsageBits | ignoredFlags)) != 0) {
-        ALOGW("cannot change usage from %#x to %#x", mNativeWindowUsageBits, usageBits);
+        //ALOGW("cannot change usage from %#x to %#x", mNativeWindowUsageBits, usageBits);
         return BAD_VALUE;
     }
 
@@ -907,7 +907,7 @@ status_t ACodec::setupNativeWindowSizeFormatAndUsage(
     OMX_U32 usage = 0;
     err = mOMX->getGraphicBufferUsage(mNode, kPortIndexOutput, &usage);
     if (err != 0) {
-        ALOGW("querying usage flags from OMX IL component failed: %d", err);
+        //ALOGW("querying usage flags from OMX IL component failed: %d", err);
         // XXX: Currently this error is logged, but not fatal.
         usage = 0;
     }
@@ -1047,8 +1047,8 @@ status_t ACodec::configureOutputBuffersFromNativeWindow(
             break;
         }
 
-        ALOGW("[%s] setting nBufferCountActual to %u failed: %d",
-                mComponentName.c_str(), newBufferCount, err);
+        //ALOGW("[%s] setting nBufferCountActual to %u failed: %d",
+        //        mComponentName.c_str(), newBufferCount, err);
         /* exit condition */
         if (extraBuffers == 0) {
             return err;
@@ -1277,7 +1277,7 @@ status_t ACodec::waitForFence(int fd, const char *dbg ) {
     if (fd >= 0) {
         sp<Fence> fence = new Fence(fd);
         res = fence->wait(IOMX::kFenceTimeoutMs);
-        ALOGW_IF(res != OK, "FENCE TIMEOUT for %d in %s", fd, dbg);
+        //ALOGW_IF(res != OK, "FENCE TIMEOUT for %d in %s", fd, dbg);
     }
     return res;
 }
@@ -1340,8 +1340,8 @@ status_t ACodec::cancelBufferToNativeWindow(BufferInfo *info) {
         mNativeWindow.get(), info->mGraphicBuffer.get(), info->mFenceFd);
     info->mFenceFd = -1;
 
-    ALOGW_IF(err != 0, "[%s] can not return buffer %u to native window",
-            mComponentName.c_str(), info->mBufferID);
+    //ALOGW_IF(err != 0, "[%s] can not return buffer %u to native window",
+    //        mComponentName.c_str(), info->mBufferID);
     // change ownership even if cancelBuffer fails
     info->mStatus = BufferInfo::OWNED_BY_NATIVE_WINDOW;
 
@@ -1393,13 +1393,13 @@ ACodec::BufferInfo *ACodec::dequeueBufferFromNativeWindow() {
     CHECK(mNativeWindow.get() != NULL);
 
     if (mTunneled) {
-        ALOGW("dequeueBufferFromNativeWindow() should not be called in tunnel"
-              " video playback mode mode!");
+        //ALOGW("dequeueBufferFromNativeWindow() should not be called in tunnel"
+        //      " video playback mode mode!");
         return NULL;
     }
 
     if (mFatalError) {
-        ALOGW("not dequeuing from native window due to fatal error");
+        //ALOGW("not dequeuing from native window due to fatal error");
         return NULL;
     }
 
@@ -1554,10 +1554,10 @@ status_t ACodec::freeBuffer(OMX_U32 portIndex, size_t i) {
     if (type == kMetadataBufferTypeANWBuffer && info->mData != NULL
             && info->mData->size() >= sizeof(VideoNativeMetadata)) {
         int fenceFd = ((VideoNativeMetadata *)info->mData->data())->nFenceFd;
-        if (fenceFd >= 0) {
-            ALOGW("unreleased fence (%d) in %s metadata buffer %zu",
-                    fenceFd, portIndex == kPortIndexInput ? "input" : "output", i);
-        }
+//         if (fenceFd >= 0) {
+//             ALOGW("unreleased fence (%d) in %s metadata buffer %zu",
+//                     fenceFd, portIndex == kPortIndexInput ? "input" : "output", i);
+//         }
     }
 
     switch (info->mStatus) {
@@ -1697,8 +1697,8 @@ status_t ACodec::setComponentRole(
                 &roleParams, sizeof(roleParams));
 
         if (err != OK) {
-            ALOGW("[%s] Failed to set standard component role '%s'.",
-                 mComponentName.c_str(), role);
+            //ALOGW("[%s] Failed to set standard component role '%s'.",
+            //     mComponentName.c_str(), role);
 
             return err;
         }
@@ -1878,9 +1878,9 @@ status_t ACodec::configureCodec(
             mTunneled = true;
 
             int32_t audioHwSync = 0;
-            if (!msg->findInt32("audio-hw-sync", &audioHwSync)) {
-                ALOGW("No Audio HW Sync provided for video tunnel");
-            }
+            //if (!msg->findInt32("audio-hw-sync", &audioHwSync)) {
+            //    ALOGW("No Audio HW Sync provided for video tunnel");
+            //}
             err = configureTunneledVideoPlayback(audioHwSync, nativeWindow);
             if (err != OK) {
                 ALOGE("configureTunneledVideoPlayback(%d,%p) failed!",
@@ -1895,8 +1895,8 @@ status_t ACodec::configureCodec(
                 err = mOMX->prepareForAdaptivePlayback(
                         mNode, kPortIndexOutput, OMX_TRUE, maxWidth, maxHeight);
                 if (err != OK) {
-                    ALOGW("[%s] prepareForAdaptivePlayback failed w/ err %d",
-                            mComponentName.c_str(), err);
+                    //ALOGW("[%s] prepareForAdaptivePlayback failed w/ err %d",
+                    //        mComponentName.c_str(), err);
                     // allow failure
                     err = OK;
                 } else {
@@ -2186,14 +2186,14 @@ status_t ACodec::configureCodec(
                             "flac-compression-level", &compressionLevel)) {
                     compressionLevel = 5; // default FLAC compression level
                 } else if (compressionLevel < 0) {
-                    ALOGW("compression level %d outside [0..8] range, "
-                          "using 0",
-                          compressionLevel);
+                    //ALOGW("compression level %d outside [0..8] range, "
+                    //      "using 0",
+                    //      compressionLevel);
                     compressionLevel = 0;
                 } else if (compressionLevel > 8) {
-                    ALOGW("compression level %d outside [0..8] range, "
-                          "using 8",
-                          compressionLevel);
+                    //ALOGW("compression level %d outside [0..8] range, "
+                    //      "using 8",
+                    //      compressionLevel);
                     compressionLevel = 8;
                 }
             }
@@ -3029,8 +3029,8 @@ status_t ACodec::setupVideoDecoder(
         err = setVideoPortFormatType(
                 kPortIndexOutput, OMX_VIDEO_CodingUnused, colorFormat, haveNativeWindow);
         if (err != OK) {
-            ALOGW("[%s] does not support color format %d",
-                  mComponentName.c_str(), colorFormat);
+            //ALOGW("[%s] does not support color format %d",
+            //      mComponentName.c_str(), colorFormat);
             err = setSupportedOutputFormat(!haveNativeWindow /* getLegacyFlexibleFormat */);
         }
     } else {
@@ -3568,13 +3568,6 @@ status_t ACodec::setupAVCEncoderParameters(const sp<AMessage> &msg) {
 
     // XXX
     // Allow higher profiles to be set since the encoder seems to support
-#if 0
-    if (h264type.eProfile != OMX_VIDEO_AVCProfileBaseline) {
-        ALOGW("Use baseline profile instead of %d for AVC recording",
-            h264type.eProfile);
-        h264type.eProfile = OMX_VIDEO_AVCProfileBaseline;
-    }
-#endif
 
     if (h264type.eProfile == OMX_VIDEO_AVCProfileBaseline) {
         h264type.nSliceHeaderSpacing = 0;
@@ -3716,8 +3709,8 @@ status_t ACodec::setupVPXEncoderParameters(const sp<AMessage> &msg) {
         } else if (tsSchema == "webrtc.vp8.3-layer") {
             pattern = OMX_VIDEO_VPXTemporalLayerPatternWebRTC;
             tsLayers = 3;
-        } else {
-            ALOGW("Unsupported ts-schema [%s]", tsSchema.c_str());
+        //} else {
+        //    ALOGW("Unsupported ts-schema [%s]", tsSchema.c_str());
         }
     }
 
@@ -3748,9 +3741,9 @@ status_t ACodec::setupVPXEncoderParameters(const sp<AMessage> &msg) {
         err = mOMX->setParameter(
                 mNode, (OMX_INDEXTYPE)OMX_IndexParamVideoAndroidVp8Encoder,
                 &vp8type, sizeof(vp8type));
-        if (err != OK) {
-            ALOGW("Extended VP8 parameters set failed: %d", err);
-        }
+//         if (err != OK) {
+//             ALOGW("Extended VP8 parameters set failed: %d", err);
+//         }
     }
 
     return configureBitrate(bitrate, bitrateMode);
@@ -3980,21 +3973,21 @@ bool ACodec::describeDefaultColorFormat(DescribeColorFormatParams &params) {
         fmt != OMX_COLOR_FormatYUV420PackedSemiPlanar &&
         fmt != OMX_TI_COLOR_FormatYUV420PackedSemiPlanar &&
         fmt != HAL_PIXEL_FORMAT_YV12) {
-        ALOGW("do not know color format 0x%x = %d", fmt, fmt);
+        //ALOGW("do not know color format 0x%x = %d", fmt, fmt);
         return false;
     }
 
     // TEMPORARY FIX for some vendors that advertise sliceHeight as 0
     if (params.nStride != 0 && params.nSliceHeight == 0) {
-        ALOGW("using sliceHeight=%u instead of what codec advertised (=0)",
-                params.nFrameHeight);
+        //ALOGW("using sliceHeight=%u instead of what codec advertised (=0)",
+        //        params.nFrameHeight);
         params.nSliceHeight = params.nFrameHeight;
     }
 
     // we need stride and slice-height to be non-zero
     if (params.nStride == 0 || params.nSliceHeight == 0) {
-        ALOGW("cannot describe color format 0x%x = %d with stride=%u and sliceHeight=%u",
-                fmt, fmt, params.nStride, params.nSliceHeight);
+        //ALOGW("cannot describe color format 0x%x = %d with stride=%u and sliceHeight=%u",
+        //        fmt, fmt, params.nStride, params.nSliceHeight);
         return false;
     }
 
@@ -4609,9 +4602,9 @@ void ACodec::sendFormatChange(const sp<AMessage> &reply) {
         CHECK(notify->findInt32("channel-count", &channelCount));
         if (mSkipCutBuffer != NULL) {
             size_t prevbufsize = mSkipCutBuffer->size();
-            if (prevbufsize != 0) {
-                ALOGW("Replacing SkipCutBuffer holding %zu bytes", prevbufsize);
-            }
+//             if (prevbufsize != 0) {
+//                 ALOGW("Replacing SkipCutBuffer holding %zu bytes", prevbufsize);
+//             }
         }
         mSkipCutBuffer = new SkipCutBuffer(mEncoderDelay, mEncoderPadding, channelCount);
     }
@@ -4632,8 +4625,8 @@ void ACodec::signalError(OMX_ERRORTYPE error, status_t internalError) {
         const status_t omxStatus = statusFromOMXError(error);
         if (omxStatus != 0) {
             internalError = omxStatus;
-        } else {
-            ALOGW("Invalid OMX error %#x", error);
+//         } else {
+//             ALOGW("Invalid OMX error %#x", error);
         }
     }
 
@@ -4923,7 +4916,7 @@ bool ACodec::BaseState::onOMXEvent(
     // verify OMX component sends back an error we expect.
     OMX_ERRORTYPE omxError = (OMX_ERRORTYPE)data1;
     if (!isOMXError(omxError)) {
-        ALOGW("Invalid OMX error %#x", omxError);
+        //ALOGW("Invalid OMX error %#x", omxError);
         omxError = OMX_ErrorUndefined;
     }
     mCodec->signalError(omxError);
@@ -5414,7 +5407,7 @@ void ACodec::BaseState::onOutputBufferDrained(const sp<AMessage> &msg) {
     android_native_rect_t crop;
     if (msg->findRect("crop", &crop.left, &crop.top, &crop.right, &crop.bottom)) {
         status_t err = native_window_set_crop(mCodec->mNativeWindow.get(), &crop);
-        ALOGW_IF(err != NO_ERROR, "failed to set crop: %d", err);
+        //ALOGW_IF(err != NO_ERROR, "failed to set crop: %d", err);
     }
 
     bool skip = mCodec->getDSModeHint(msg);
@@ -5444,7 +5437,7 @@ void ACodec::BaseState::onOutputBufferDrained(const sp<AMessage> &msg) {
 
         status_t err;
         err = native_window_set_buffers_timestamp(mCodec->mNativeWindow.get(), timestampNs);
-        ALOGW_IF(err != NO_ERROR, "failed to set buffer timestamp: %d", err);
+        //ALOGW_IF(err != NO_ERROR, "failed to set buffer timestamp: %d", err);
 
         info->checkReadFence("onOutputBufferDrained before queueBuffer");
         err = mCodec->mNativeWindow->queueBuffer(
@@ -5578,8 +5571,8 @@ bool ACodec::UninitializedState::onMessageReceived(const sp<AMessage> &msg) {
             int32_t keepComponentAllocated;
             CHECK(msg->findInt32(
                         "keepComponentAllocated", &keepComponentAllocated));
-            ALOGW_IF(keepComponentAllocated,
-                     "cannot keep component allocated on shutdown in Uninitialized state");
+            //ALOGW_IF(keepComponentAllocated,
+            //         "cannot keep component allocated on shutdown in Uninitialized state");
 
             sp<AMessage> notify = mCodec->mNotify->dup();
             notify->setInt32("what", CodecBase::kWhatShutdownCompleted);
@@ -5696,8 +5689,8 @@ bool ACodec::UninitializedState::onAllocateComponent(const sp<AMessage> &msg) {
 
         if (err == OK) {
             break;
-        } else {
-            ALOGW("Allocating component '%s' failed, try next one.", componentName.c_str());
+//         } else {
+//             ALOGW("Allocating component '%s' failed, try next one.", componentName.c_str());
         }
 
         node = 0;
@@ -5912,8 +5905,8 @@ bool ACodec::LoadedState::onConfigureComponent(
 
                 if (err == OK) {
                     break;
-                } else {
-                    ALOGW("Allocating component '%s' failed, try next one.", componentName.c_str());
+//                 } else {
+//                     ALOGW("Allocating component '%s' failed, try next one.", componentName.c_str());
                 }
 
                 mCodec->mNode = 0;
@@ -6381,9 +6374,9 @@ void ACodec::ExecutingState::resume() {
     submitOutputBuffers();
 
     // Post all available input buffers
-    if (mCodec->mBuffers[kPortIndexInput].size() == 0u) {
-        ALOGW("[%s] we don't have any input buffers to resume", mCodec->mComponentName.c_str());
-    }
+//     if (mCodec->mBuffers[kPortIndexInput].size() == 0u) {
+//         ALOGW("[%s] we don't have any input buffers to resume", mCodec->mComponentName.c_str());
+//     }
 
     for (size_t i = 0; i < mCodec->mBuffers[kPortIndexInput].size(); i++) {
         BufferInfo *info = &mCodec->mBuffers[kPortIndexInput].editItemAt(i);
@@ -6467,9 +6460,9 @@ bool ACodec::ExecutingState::onMessageReceived(const sp<AMessage> &msg) {
         case kWhatRequestIDRFrame:
         {
             status_t err = mCodec->requestIDRFrame();
-            if (err != OK) {
-                ALOGW("Requesting an IDR frame failed.");
-            }
+//             if (err != OK) {
+//                 ALOGW("Requesting an IDR frame failed.");
+//             }
 
             handled = true;
             break;
@@ -6762,7 +6755,7 @@ bool ACodec::OutputPortSettingsChangedState::onOMXEvent(
         {
             if (data1 == (OMX_U32)OMX_CommandPortDisable) {
                 if (data2 != (OMX_U32)kPortIndexOutput) {
-                    ALOGW("ignoring EventCmdComplete CommandPortDisable for port %u", data2);
+                    //ALOGW("ignoring EventCmdComplete CommandPortDisable for port %u", data2);
                     return false;
                 }
 
@@ -6800,7 +6793,7 @@ bool ACodec::OutputPortSettingsChangedState::onOMXEvent(
                 return true;
             } else if (data1 == (OMX_U32)OMX_CommandPortEnable) {
                 if (data2 != (OMX_U32)kPortIndexOutput) {
-                    ALOGW("ignoring EventCmdComplete OMX_CommandPortEnable for port %u", data2);
+                    //ALOGW("ignoring EventCmdComplete OMX_CommandPortEnable for port %u", data2);
                     return false;
                 }
 
@@ -6845,7 +6838,7 @@ bool ACodec::ExecutingToIdleState::onMessageReceived(const sp<AMessage> &msg) {
         {
             // Don't send me a flush request if you previously wanted me
             // to shutdown.
-            ALOGW("Ignoring flush request in ExecutingToIdleState");
+            //ALOGW("Ignoring flush request in ExecutingToIdleState");
             break;
         }
 
@@ -7065,8 +7058,8 @@ bool ACodec::FlushingState::onOMXEvent(
 
             if (data2 == kPortIndexInput || data2 == kPortIndexOutput) {
                 if (mFlushComplete[data2]) {
-                    ALOGW("Flush already completed for %s port",
-                            data2 == kPortIndexInput ? "input" : "output");
+                    //ALOGW("Flush already completed for %s port",
+                    //        data2 == kPortIndexInput ? "input" : "output");
                     return true;
                 }
                 mFlushComplete[data2] = true;
@@ -7076,15 +7069,15 @@ bool ACodec::FlushingState::onOMXEvent(
                 }
             } else if (data2 == OMX_ALL) {
                 if (!mFlushComplete[kPortIndexInput] || !mFlushComplete[kPortIndexOutput]) {
-                    ALOGW("received flush complete event for OMX_ALL before ports have been"
-                            "flushed (%d/%d)",
-                            mFlushComplete[kPortIndexInput], mFlushComplete[kPortIndexOutput]);
+                    //ALOGW("received flush complete event for OMX_ALL before ports have been"
+                    //        "flushed (%d/%d)",
+                    //        mFlushComplete[kPortIndexInput], mFlushComplete[kPortIndexOutput]);
                     return false;
                 }
 
                 changeStateIfWeOwnAllBuffers();
-            } else {
-                ALOGW("data2 not OMX_ALL but %u in EventCmdComplete CommandFlush", data2);
+//             } else {
+//                 ALOGW("data2 not OMX_ALL but %u in EventCmdComplete CommandFlush", data2);
             }
 
             return true;

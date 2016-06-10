@@ -40,14 +40,18 @@
 static const OMX_U32 kPortIndexInput = 0;
 static const OMX_U32 kPortIndexOutput = 1;
 
-#define CLOGW(fmt, ...) ALOGW("[%x:%s] " fmt, mNodeID, mName, ##__VA_ARGS__)
+//#define CLOGW(fmt, ...) ALOGW("[%x:%s] " fmt, mNodeID, mName, ##__VA_ARGS__)
+#define CLOGW(...)
 
-#define CLOG_ERROR_IF(cond, fn, err, fmt, ...) \
-    ALOGE_IF(cond, #fn "(%x:%s, " fmt ") ERROR: %s(%#x)", \
-    mNodeID, mName, ##__VA_ARGS__, asString(err), err)
-#define CLOG_ERROR(fn, err, fmt, ...) CLOG_ERROR_IF(true, fn, err, fmt, ##__VA_ARGS__)
-#define CLOG_IF_ERROR(fn, err, fmt, ...) \
-    CLOG_ERROR_IF((err) != OMX_ErrorNone, fn, err, fmt, ##__VA_ARGS__)
+// #define CLOG_ERROR_IF(cond, fn, err, fmt, ...) \
+//     ALOGE_IF(cond, #fn "(%x:%s, " fmt ") ERROR: %s(%#x)", \
+//     mNodeID, mName, ##__VA_ARGS__, asString(err), err)
+#define CLOG_ERROR_IF(...)
+// #define CLOG_ERROR(fn, err, fmt, ...) CLOG_ERROR_IF(true, fn, err, fmt, ##__VA_ARGS__)
+#define CLOG_ERROR(...)
+// #define CLOG_IF_ERROR(fn, err, fmt, ...) \
+//     CLOG_ERROR_IF((err) != OMX_ErrorNone, fn, err, fmt, ##__VA_ARGS__)
+#define CLOG_IF_ERROR(...)
 
 #define CLOGI_(level, fn, fmt, ...) \
     ALOGI_IF(DEBUG >= (level), #fn "(%x:%s, " fmt ")", mNodeID, mName, ##__VA_ARGS__)
