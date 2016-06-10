@@ -136,7 +136,7 @@ status_t AudioStreamOut::open(
     if (status == NO_ERROR) {
         stream = outStream;
         mHalFormatIsLinearPcm = audio_is_linear_pcm(config->format);
-        ALOGI("AudioStreamOut::open(), mHalFormatIsLinearPcm = %d", (int)mHalFormatIsLinearPcm);
+        //ALOGI("AudioStreamOut::open(), mHalFormatIsLinearPcm = %d", (int)mHalFormatIsLinearPcm);
         mHalFrameSize = audio_stream_out_frame_size(stream);
     }
 

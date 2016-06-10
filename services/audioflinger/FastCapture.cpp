@@ -17,7 +17,7 @@
 #define LOG_TAG "FastCapture"
 //#define LOG_NDEBUG 0
 
-#define ATRACE_TAG ATRACE_TAG_AUDIO
+//#define ATRACE_TAG ATRACE_TAG_AUDIO
 
 #include "Configuration.h"
 #include <linux/futex.h>

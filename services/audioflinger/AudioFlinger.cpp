@@ -254,11 +254,11 @@ void AudioFlinger::onFirstRef()
         uint32_t int_val;
         if (1 == sscanf(val_str, "%u", &int_val)) {
             mStandbyTimeInNsecs = milliseconds(int_val);
-            ALOGI("Using %u mSec as standby time.", int_val);
+            //ALOGI("Using %u mSec as standby time.", int_val);
         } else {
             mStandbyTimeInNsecs = kDefaultStandbyTimeInNsecs;
-            ALOGI("Using default %u mSec as standby time.",
-                    (uint32_t)(mStandbyTimeInNsecs / 1000000));
+            //ALOGI("Using default %u mSec as standby time.",
+            //        (uint32_t)(mStandbyTimeInNsecs / 1000000));
         }
     }
 
@@ -655,7 +655,7 @@ sp<IAudioTrack> AudioFlinger::createTrack(
                 *sessionId = lSessionId;
             }
         }
-        ALOGV("createTrack() lSessionId: %d", lSessionId);
+        //ALOGV("createTrack() lSessionId: %d", lSessionId);
 
         track = thread->createTrack_l(client, streamType, sampleRate, format,
                 channelMask, frameCount, sharedBuffer, lSessionId, flags, tid, clientUid, &lStatus);
@@ -715,7 +715,7 @@ uint32_t AudioFlinger::sampleRate(audio_io_handle_t output) const
     Mutex::Autolock _l(mLock);
     PlaybackThread *thread = checkPlaybackThread_l(output);
     if (thread == NULL) {
-        ALOGW("sampleRate() unknown thread %d", output);
+        //ALOGW("sampleRate() unknown thread %d", output);
         return 0;
     }
     return thread->sampleRate();
@@ -726,7 +726,7 @@ audio_format_t AudioFlinger::format(audio_io_handle_t output) const
     Mutex::Autolock _l(mLock);
     PlaybackThread *thread = checkPlaybackThread_l(output);
     if (thread == NULL) {
-        ALOGW("format() unknown thread %d", output);
+        //ALOGW("format() unknown thread %d", output);
         return AUDIO_FORMAT_INVALID;
     }
     return thread->format();
@@ -737,7 +737,7 @@ size_t AudioFlinger::frameCount(audio_io_handle_t output) const
     Mutex::Autolock _l(mLock);
     PlaybackThread *thread = checkPlaybackThread_l(output);
     if (thread == NULL) {
-        ALOGW("frameCount() unknown thread %d", output);
+        //ALOGW("frameCount() unknown thread %d", output);
         return 0;
     }
     // FIXME currently returns the normal mixer's frame count to avoid confusing legacy callers;
@@ -750,7 +750,7 @@ uint32_t AudioFlinger::latency(audio_io_handle_t output) const
     Mutex::Autolock _l(mLock);
     PlaybackThread *thread = checkPlaybackThread_l(output);
     if (thread == NULL) {
-        ALOGW("latency(): no playback thread found for output handle %d", output);
+        //ALOGW("latency(): no playback thread found for output handle %d", output);
         return 0;
     }
     return thread->latency();
@@ -809,7 +809,7 @@ status_t AudioFlinger::setMode(audio_mode_t mode)
         return PERMISSION_DENIED;
     }
     if (uint32_t(mode) >= AUDIO_MODE_CNT) {
-        ALOGW("Illegal value: setMode(%d)", mode);
+        //ALOGW("Illegal value: setMode(%d)", mode);
         return BAD_VALUE;
     }
 
@@ -944,12 +944,12 @@ bool AudioFlinger::masterMute_l() const
 status_t AudioFlinger::checkStreamType(audio_stream_type_t stream) const
 {
     if (uint32_t(stream) >= AUDIO_STREAM_CNT) {
-        ALOGW("setStreamVolume() invalid stream %d", stream);
+        //ALOGW("setStreamVolume() invalid stream %d", stream);
         return BAD_VALUE;
     }
     pid_t caller = IPCThreadState::self()->getCallingPid();
     if (uint32_t(stream) >= AUDIO_STREAM_PUBLIC_CNT && caller != getpid_cached) {
-        ALOGW("setStreamVolume() pid %d cannot use internal stream type %d", caller, stream);
+        //ALOGW("setStreamVolume() pid %d cannot use internal stream type %d", caller, stream);
         return PERMISSION_DENIED;
     }
 
@@ -1095,9 +1095,9 @@ status_t AudioFlinger::setParameters(audio_io_handle_t ioHandle, const String8& 
         String8 value, key;
         key = String8("SND_CARD_STATUS");
         if (param.get(key, value) == NO_ERROR) {
-            ALOGV("Set keySoundCardStatus:%s", value.string());
+            //ALOGV("Set keySoundCardStatus:%s", value.string());
             if ((value.find("OFFLINE", 0) != -1) ) {
-                ALOGV("OFFLINE detected - call InvalidateTracks()");
+                //ALOGV("OFFLINE detected - call InvalidateTracks()");
                 for (size_t i = 0; i < mPlaybackThreads.size(); i++) {
                     PlaybackThread *thread = mPlaybackThreads.valueAt(i).get();
                     if( thread->getOutput()->flags & AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD ){
@@ -1167,8 +1167,8 @@ status_t AudioFlinger::setParameters(audio_io_handle_t ioHandle, const String8& 
 
 String8 AudioFlinger::getParameters(audio_io_handle_t ioHandle, const String8& keys) const
 {
-    ALOGVV("getParameters() io %d, keys %s, calling pid %d",
-            ioHandle, keys.string(), IPCThreadState::self()->getCallingPid());
+//     ALOGVV("getParameters() io %d, keys %s, calling pid %d",
+//             ioHandle, keys.string(), IPCThreadState::self()->getCallingPid());
 
     Mutex::Autolock _l(mLock);
 
@@ -1240,9 +1240,9 @@ size_t AudioFlinger::getInputBufferSize(uint32_t sampleRate, audio_format_t form
         } else if (proposed.sample_rate != 44100) { // 44.1 is claimed as must in CDD as well as
             proposed.sample_rate = 44100;           // legacy AudioRecord.java. TODO: Query hw?
         } else {
-            ALOGW("getInputBufferSize failed with minimum buffer size sampleRate %u, "
-                    "format %#x, channelMask 0x%X",
-                    sampleRate, format, channelMask);
+//             ALOGW("getInputBufferSize failed with minimum buffer size sampleRate %u, "
+//                     "format %#x, channelMask 0x%X",
+//                     sampleRate, format, channelMask);
             break; // retries failed, break out of loop with frames == 0.
         }
     }
@@ -1445,8 +1445,8 @@ bool AudioFlinger::Client::reserveTimedTrack()
     Mutex::Autolock _l(mTimedTrackLock);
 
     if (mTimedTrackCount >= kMaxTimedTracksPerClient) {
-        ALOGW("can not create timed track - pid %d has exceeded the limit",
-             mPid);
+//         ALOGW("can not create timed track - pid %d has exceeded the limit",
+//              mPid);
         return false;
     }
 
@@ -1634,7 +1634,7 @@ audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
 
     int rc = load_audio_interface(name, &dev);
     if (rc) {
-        ALOGI("loadHwModule() error %d loading module %s ", rc, name);
+        ALOGW("loadHwModule() error %d loading module %s ", rc, name);
         return 0;
     }
 
@@ -1642,7 +1642,7 @@ audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
     rc = dev->init_check(dev);
     mHardwareStatus = AUDIO_HW_IDLE;
     if (rc) {
-        ALOGI("loadHwModule() init check error %d for module %s ", rc, name);
+        ALOGW("loadHwModule() init check error %d for module %s ", rc, name);
         return 0;
     }
 
@@ -1693,8 +1693,8 @@ audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
     audio_module_handle_t handle = nextUniqueId();
     mAudioHwDevs.add(handle, new AudioHwDevice(handle, name, dev, flags));
 
-    ALOGI("loadHwModule() Loaded %s audio interface from %s (%s) handle %d",
-          name, dev->common.module->name, dev->common.module->id, handle);
+//     ALOGI("loadHwModule() Loaded %s audio interface from %s (%s) handle %d",
+//           name, dev->common.module->name, dev->common.module->id, handle);
 
     return handle;
 
@@ -1754,7 +1754,7 @@ audio_hw_sync_t AudioFlinger::getAudioHwSyncForSession(audio_session_t sessionId
 
     int value;
     if (param.getInt(String8(AUDIO_PARAMETER_HW_AV_SYNC), value) != NO_ERROR) {
-        ALOGW("getAudioHwSyncForSession error getting sync for session %d", sessionId);
+        //ALOGW("getAudioHwSyncForSession error getting sync for session %d", sessionId);
         return AUDIO_HW_SYNC_INVALID;
     }
 
@@ -1788,9 +1788,9 @@ audio_hw_sync_t AudioFlinger::getAudioHwSyncForSession(audio_session_t sessionId
 status_t AudioFlinger::systemReady()
 {
     Mutex::Autolock _l(mLock);
-    ALOGI("%s", __FUNCTION__);
+    //ALOGI("%s", __FUNCTION__);
     if (mSystemReady) {
-        ALOGW("%s called twice", __FUNCTION__);
+        //ALOGW("%s called twice", __FUNCTION__);
         return NO_ERROR;
     }
     mSystemReady = true;
@@ -1907,13 +1907,13 @@ status_t AudioFlinger::openOutput(audio_module_handle_t module,
                                   uint32_t *latencyMs,
                                   audio_output_flags_t flags)
 {
-    ALOGI("openOutput(), module %d Device %x, SamplingRate %d, Format %#08x, Channels %x, flags %x",
-              module,
-              (devices != NULL) ? *devices : 0,
-              config->sample_rate,
-              config->format,
-              config->channel_mask,
-              flags);
+//     ALOGI("openOutput(), module %d Device %x, SamplingRate %d, Format %#08x, Channels %x, flags %x",
+//               module,
+//               (devices != NULL) ? *devices : 0,
+//               config->sample_rate,
+//               config->format,
+//               config->channel_mask,
+//               flags);
 
     if (*devices == AUDIO_DEVICE_NONE) {
         return BAD_VALUE;
@@ -1930,7 +1930,7 @@ status_t AudioFlinger::openOutput(audio_module_handle_t module,
 
         // the first primary output opened designates the primary hw device
         if ((mPrimaryHardwareDev == NULL) && (flags & AUDIO_OUTPUT_FLAG_PRIMARY)) {
-            ALOGI("Using module %d has the primary audio interface", module);
+            //ALOGI("Using module %d has the primary audio interface", module);
             mPrimaryHardwareDev = thread->getOutput()->audioHwDev;
 
             AutoMutex lock(mHardwareLock);
@@ -1952,8 +1952,8 @@ audio_io_handle_t AudioFlinger::openDuplicateOutput(audio_io_handle_t output1,
     MixerThread *thread2 = checkMixerThread_l(output2);
 
     if (thread1 == NULL || thread2 == NULL) {
-        ALOGW("openDuplicateOutput() wrong output mixer type for output %d or %d", output1,
-                output2);
+        //ALOGW("openDuplicateOutput() wrong output mixer type for output %d or %d", output1,
+        //        output2);
         return AUDIO_IO_HANDLE_NONE;
     }
 
@@ -2337,7 +2337,7 @@ void AudioFlinger::acquireAudioSessionId(int audioSession, pid_t pid)
         // called from a different pid leaving a stale session reference.  Also we don't know how
         // to clear this reference if the client process dies.
         if (mNotificationClients.indexOfKey(caller) < 0) {
-            ALOGW("acquireAudioSessionId() unknown client %d for session %d", caller, audioSession);
+            //ALOGW("acquireAudioSessionId() unknown client %d for session %d", caller, audioSession);
             return;
         }
     }
@@ -2747,17 +2747,17 @@ status_t AudioFlinger::moveEffects(int sessionId, audio_io_handle_t srcOutput,
             sessionId, srcOutput, dstOutput);
     Mutex::Autolock _l(mLock);
     if (srcOutput == dstOutput) {
-        ALOGW("moveEffects() same dst and src outputs %d", dstOutput);
+        //ALOGW("moveEffects() same dst and src outputs %d", dstOutput);
         return NO_ERROR;
     }
     PlaybackThread *srcThread = checkPlaybackThread_l(srcOutput);
     if (srcThread == NULL) {
-        ALOGW("moveEffects() bad srcOutput %d", srcOutput);
+        //ALOGW("moveEffects() bad srcOutput %d", srcOutput);
         return BAD_VALUE;
     }
     PlaybackThread *dstThread = checkPlaybackThread_l(dstOutput);
     if (dstThread == NULL) {
-        ALOGW("moveEffects() bad dstOutput %d", dstOutput);
+        //ALOGW("moveEffects() bad dstOutput %d", dstOutput);
         return BAD_VALUE;
     }
 
@@ -2777,8 +2777,8 @@ status_t AudioFlinger::moveEffectChain_l(int sessionId,
 
     sp<EffectChain> chain = srcThread->getEffectChain_l(sessionId);
     if (chain == 0) {
-        ALOGW("moveEffectChain_l() effect chain for session %d not on source thread %p",
-                sessionId, srcThread);
+        //ALOGW("moveEffectChain_l() effect chain for session %d not on source thread %p",
+        //        sessionId, srcThread);
         return INVALID_OPERATION;
     }
 
@@ -2787,9 +2787,9 @@ status_t AudioFlinger::moveEffectChain_l(int sessionId,
     // than disabling the addEffect_l() call in dstThread below.
     if ((dstThread->type() == ThreadBase::MIXER || dstThread->isDuplicating()) &&
             dstThread->mChannelCount != FCC_2) {
-        ALOGW("moveEffectChain_l() effect chain failed because"
-                " destination thread %p channel count(%u) != %u",
-                dstThread, dstThread->mChannelCount, FCC_2);
+//         ALOGW("moveEffectChain_l() effect chain failed because"
+//                 " destination thread %p channel count(%u) != %u",
+//                 dstThread, dstThread->mChannelCount, FCC_2);
         return INVALID_OPERATION;
     }
 
@@ -2823,7 +2823,7 @@ status_t AudioFlinger::moveEffectChain_l(int sessionId,
         if (dstChain == 0) {
             dstChain = effect->chain().promote();
             if (dstChain == 0) {
-                ALOGW("moveEffectChain_l() cannot get chain from effect %p", effect.get());
+                //ALOGW("moveEffectChain_l() cannot get chain from effect %p", effect.get());
                 status = NO_INIT;
                 break;
             }
@@ -2897,7 +2897,7 @@ status_t AudioFlinger::putOrphanEffectChain_l(const sp<AudioFlinger::EffectChain
     ssize_t index = mOrphanEffectChains.indexOfKey(session);
     ALOGV("putOrphanEffectChain_l session %d index %d", session, index);
     if (index >= 0) {
-        ALOGW("putOrphanEffectChain_l chain for session %d already present", session);
+        //ALOGW("putOrphanEffectChain_l chain for session %d already present", session);
         return ALREADY_EXISTS;
     }
     mOrphanEffectChains.add(session, chain);
@@ -2969,14 +2969,14 @@ void AudioFlinger::dumpTee(int fd, const sp<NBAIO_Source>& source, audio_io_hand
                 struct dirent *result = NULL;
                 int rc = readdir_r(dir, &de, &result);
                 if (rc != 0) {
-                    ALOGW("readdir_r failed %d", rc);
+                    //ALOGW("readdir_r failed %d", rc);
                     break;
                 }
                 if (result == NULL) {
                     break;
                 }
                 if (result != &de) {
-                    ALOGW("readdir_r returned unexpected result %p != %p", result, &de);
+                    //ALOGW("readdir_r returned unexpected result %p != %p", result, &de);
                     break;
                 }
                 // ignore non .wav file entries

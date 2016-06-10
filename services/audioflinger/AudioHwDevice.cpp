@@ -59,13 +59,13 @@ status_t AudioHwDevice::openOutputStream(
         // FIXME Look at any modification to the config.
         // The HAL might modify the config to suggest a wrapped format.
         // Log this so we can see what the HALs are doing.
-        ALOGI("openOutputStream(), HAL returned"
-            " sampleRate %d, Format %#x, "
-            "channelMask %#x, status %d",
-            config->sample_rate,
-            config->format,
-            config->channel_mask,
-            status);
+//         ALOGI("openOutputStream(), HAL returned"
+//             " sampleRate %d, Format %#x, "
+//             "channelMask %#x, status %d",
+//             config->sample_rate,
+//             config->format,
+//             config->channel_mask,
+//             status);
 
         // If the data is encoded then try again using wrapped PCM.
         bool wrapperNeeded = !audio_is_linear_pcm(originalConfig.format)

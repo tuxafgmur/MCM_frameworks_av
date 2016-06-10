@@ -80,16 +80,16 @@ status_t SpdifStreamOut::open(
     // Always print this because otherwise it could be very confusing if the
     // HAL and AudioFlinger are using different formats.
     // Print before open() because HAL may modify customConfig.
-    ALOGI("SpdifStreamOut::open() AudioFlinger requested"
-            " sampleRate %d, format %#x, channelMask %#x",
-            config->sample_rate,
-            config->format,
-            config->channel_mask);
-    ALOGI("SpdifStreamOut::open() HAL configured for"
-            " sampleRate %d, format %#x, channelMask %#x",
-            customConfig.sample_rate,
-            customConfig.format,
-            customConfig.channel_mask);
+//     ALOGI("SpdifStreamOut::open() AudioFlinger requested"
+//             " sampleRate %d, format %#x, channelMask %#x",
+//             config->sample_rate,
+//             config->format,
+//             config->channel_mask);
+//     ALOGI("SpdifStreamOut::open() HAL configured for"
+//             " sampleRate %d, format %#x, channelMask %#x",
+//             customConfig.sample_rate,
+//             customConfig.format,
+//             customConfig.channel_mask);
 
     status_t status = AudioStreamOut::open(
             handle,
@@ -97,7 +97,7 @@ status_t SpdifStreamOut::open(
             &customConfig,
             address);
 
-    ALOGI("SpdifStreamOut::open() status = %d", status);
+//    ALOGI("SpdifStreamOut::open() status = %d", status);
 
     return status;
 }

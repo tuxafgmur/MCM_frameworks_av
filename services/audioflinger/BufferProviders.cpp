@@ -263,8 +263,8 @@ void DownmixerBufferProvider::copyFrames(void *dst, const void *src, size_t fram
         if (EffectQueryEffect(i, &sDwnmFxDesc) == 0) {
             ALOGV("effect %d is called %s", i, sDwnmFxDesc.name);
             if (memcmp(&sDwnmFxDesc.type, EFFECT_UIID_DOWNMIX, sizeof(effect_uuid_t)) == 0) {
-                ALOGI("found effect \"%s\" from %s",
-                        sDwnmFxDesc.name, sDwnmFxDesc.implementor);
+//                 ALOGI("found effect \"%s\" from %s",
+//                         sDwnmFxDesc.name, sDwnmFxDesc.implementor);
                 sIsMultichannelCapable = true;
                 break;
             }

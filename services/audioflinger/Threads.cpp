@@ -37,7 +37,7 @@
 
 #define LOG_TAG "AudioFlinger"
 //#define LOG_NDEBUG 0
-#define ATRACE_TAG ATRACE_TAG_AUDIO
+//#define ATRACE_TAG ATRACE_TAG_AUDIO
 
 #include "Configuration.h"
 #include <math.h>
@@ -585,11 +585,9 @@ AudioFlinger::ThreadBase::~ThreadBase()
 status_t AudioFlinger::ThreadBase::readyToRun()
 {
     status_t status = initCheck();
-    if (status == NO_ERROR) {
-        ALOGI("AudioFlinger's thread %p ready to run", this);
-    } else {
+    if (status != NO_ERROR)
         ALOGE("No working audio driver found.");
-    }
+
     return status;
 }
 
@@ -987,7 +985,7 @@ void AudioFlinger::ThreadBase::getPowerManager_l() {
 void AudioFlinger::ThreadBase::updateWakeLockUids_l(const SortedVector<int> &uids) {
     getPowerManager_l();
     if (mWakeLockToken == NULL) {
-        ALOGE("no wake lock to update!");
+        //ALOGE("no wake lock to update!");
         return;
     }
     if (mPowerManager != 0) {
@@ -2231,8 +2229,8 @@ void AudioFlinger::PlaybackThread::readOutputParameters_l()
     if (mType == MIXER || mType == DUPLICATING) {
         mNormalFrameCount = (mNormalFrameCount + 15) & ~15;
     }
-    ALOGI("HAL output buffer size %u frames, normal sink buffer size %u frames", mFrameCount,
-            mNormalFrameCount);
+//     ALOGI("HAL output buffer size %u frames, normal sink buffer size %u frames", mFrameCount,
+//             mNormalFrameCount);
 
     // Check if we want to throttle the processing to no more than 2x normal rate
     mThreadThrottle = property_get_bool("af.thread.throttle", true /* default_value */);
@@ -3013,8 +3011,8 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                         mNumDelayedWrites++;
                         if ((now - lastWarning) > kWarningThrottleNs) {
                             ATRACE_NAME("underrun");
-                            ALOGW("write blocked for %llu msecs, %d delayed writes, thread %p",
-                                    ns2ms(delta), mNumDelayedWrites, this);
+                            //ALOGW("write blocked for %llu msecs, %d delayed writes, thread %p",
+                            //        ns2ms(delta), mNumDelayedWrites, this);
                             lastWarning = now;
                         }
                     }
@@ -3050,7 +3048,7 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                             uint32_t diff = mThreadThrottleTimeMs - mThreadThrottleEndMs;
                             if (diff > 0) {
                                 // notify of throttle end on debug log
-                                ALOGD("mixer(%p) throttle end: throttle time(%u)", this, diff);
+                                // ALOGD("mixer(%p) throttle end: throttle time(%u)", this, diff);
                                 mThreadThrottleEndMs = mThreadThrottleTimeMs;
                             }
                         }
@@ -4204,7 +4202,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                 // No buffers for this track. Give it a few chances to
                 // fill a buffer, then remove it from active list.
                 if (--(track->mRetryCount) <= 0) {
-                    ALOGI("BUFFER TIMEOUT: remove(%d) from active list on thread %p", name, this);
+                    //ALOGI("BUFFER TIMEOUT: remove(%d) from active list on thread %p", name, this);
                     tracksToRemove->add(track);
                     // indicate to client process that the track was disabled because of underrun;
                     // it will then automatically call start() when data is available
