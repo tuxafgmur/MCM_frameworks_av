@@ -713,7 +713,7 @@ status_t MediaPlayerService::Client::setDataSource(
         int fd = android::openContentProviderFile(url16);
         if (fd < 0)
         {
-            ALOGE("Couldn't open fd for %s", url);
+            //ALOGE("Couldn't open fd for %s", url);
             return UNKNOWN_ERROR;
         }
         setDataSource(fd, 0, 0x7fffffffffLL); // this sets mStatus

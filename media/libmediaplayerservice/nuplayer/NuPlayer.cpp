@@ -1786,12 +1786,12 @@ void NuPlayer::flushDecoder(bool audio, bool needShutdown) {
     mFlushComplete[audio][false /* isDecoder */] = (mRenderer == NULL);
     mFlushComplete[audio][true /* isDecoder */] = false;
     if (audio) {
-        ALOGE_IF(mFlushingAudio != NONE,
-                "audio flushDecoder() is called in state %d", mFlushingAudio);
+        //ALOGE_IF(mFlushingAudio != NONE,
+        //        "audio flushDecoder() is called in state %d", mFlushingAudio);
         mFlushingAudio = newStatus;
     } else {
-        ALOGE_IF(mFlushingVideo != NONE,
-                "video flushDecoder() is called in state %d", mFlushingVideo);
+        //ALOGE_IF(mFlushingVideo != NONE,
+        //        "video flushDecoder() is called in state %d", mFlushingVideo);
         mFlushingVideo = newStatus;
     }
 }

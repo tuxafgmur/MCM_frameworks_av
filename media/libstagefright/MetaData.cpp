@@ -350,7 +350,7 @@ String8 MetaData::typed_data::asString() const {
             out = String8::format("(unknown type %d, size %zu)", mType, mSize);
             if (mSize <= 48) { // if it's less than three lines of hex data, dump it
                 AString foo;
-                hexdump(data, mSize, 0, &foo);
+                //hexdump(data, mSize, 0, &foo);
                 out.append("\n");
                 out.append(foo.c_str());
             }
@@ -368,13 +368,15 @@ static void MakeFourCCString(uint32_t x, char *s) {
 }
 
 void MetaData::dumpToLog() const {
+#if 0    
     for (int i = mItems.size(); --i >= 0;) {
         int32_t key = mItems.keyAt(i);
         char cc[5];
         MakeFourCCString(key, cc);
         const typed_data &item = mItems.valueAt(i);
-        ALOGI("%s: %s", cc, item.asString().string());
+        //ALOGI("%s: %s", cc, item.asString().string());
     }
+#endif
 }
 
 }  // namespace android

@@ -223,7 +223,7 @@ status_t NuPlayer::Renderer::onGetPlaybackSettings(AudioPlaybackRate *rate /* no
         status_t err = mAudioSink->getPlaybackRate(rate);
         if (err == OK) {
             if (!isAudioPlaybackRateEqual(*rate, mPlaybackSettings)) {
-                ALOGW("correcting mismatch in internal/external playback rate");
+                //ALOGW("correcting mismatch in internal/external playback rate");
             }
             // get playback settings used by audiosink, as it may be
             // slightly off due to audiosink not taking small changes.
@@ -458,7 +458,7 @@ void NuPlayer::Renderer::onMessageReceived(const sp<AMessage> &msg) {
             if (onDrainAudioQueue()) {
                 uint32_t numFramesPlayed;
                 if (mAudioSink->getPosition(&numFramesPlayed) != OK) {
-                    ALOGW("mAudioSink->getPosition failed");
+                    //ALOGW("mAudioSink->getPosition failed");
                     break;
                 }
                 uint32_t numFramesPendingPlayout =
@@ -1106,8 +1106,8 @@ void NuPlayer::Renderer::postDrainVideoQueue() {
             msg->setWhat(kWhatPostDrainVideoQueue);
             msg->post(postDelayUs);
             mVideoScheduler->restart();
-            ALOGI("possible video time jump of %dms, retrying in %dms",
-                    (int)(delayUs / 1000), (int)(postDelayUs / 1000));
+//             ALOGI("possible video time jump of %dms, retrying in %dms",
+//                     (int)(delayUs / 1000), (int)(postDelayUs / 1000));
             mDrainVideoQueuePending = true;
             return;
         }
@@ -1118,7 +1118,7 @@ void NuPlayer::Renderer::postDrainVideoQueue() {
 
     delayUs = realTimeUs - nowUs;
 
-    ALOGW_IF(delayUs > 500000, "unusually high delayUs: %" PRId64, delayUs);
+    //ALOGW_IF(delayUs > 500000, "unusually high delayUs: %" PRId64, delayUs);
     // post 2 display refreshes before rendering is due
     // FIXME currently this increases power consumption, so unless frame-accurate
     // AV sync is requested, post closer to required render time (at 0.63 vsyncs)
@@ -1278,7 +1278,7 @@ void NuPlayer::Renderer::onQueueBuffer(const sp<AMessage> &msg) {
             // passthru decoder pushes some buffers before the audio sink
             // is opened. Since the offload format is known only when the sink
             // is opened, pcm conversions cannot take place. So, retry.
-            ALOGI("init pending, retrying in 10ms, this shouldn't happen");
+            //ALOGI("init pending, retrying in 10ms, this shouldn't happen");
             msg->post(10000LL);
             return;
         case OK:
@@ -1757,7 +1757,7 @@ status_t NuPlayer::Renderer::onOpenAudioSink(
             offloadOnly, offloadingAudio());
 
     if (mAudioTearingDown) {
-        ALOGW("openAudioSink: not opening now!, would happen after teardown");
+        //ALOGW("openAudioSink: not opening now!, would happen after teardown");
         return OK;
     }
     bool audioSinkChanged = false;
